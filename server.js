@@ -14,6 +14,10 @@ const static = require("./routes/static")
  * Routes
  *************************/
 app.use(static)
+// Index route
+app.get("/", (req, res) => {
+  res.render("index", {title: "Home"})
+})
 
 /* ***********************
  * Local Server Information
