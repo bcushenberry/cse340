@@ -70,6 +70,11 @@ footer {
   font-weight: bold;
 }
 
+#reviews h2, #upgrades h2 {
+  font-size: 24px;
+  font-weight: bold;
+}
+
 #hero-img {
   max-width: 100%;
   height: auto; 
@@ -137,7 +142,7 @@ footer {
 }
 
 .caption {
-  background-color: transparent;
+  background-color: white;
 }
 
 #flame-caption {
