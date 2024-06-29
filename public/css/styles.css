@@ -9,6 +9,8 @@ body {
   justify-content: center;
   font-family: "Montserrat", Helvetica, sans-serif;
   max-width: 95%;
+  background-color: white;
+  color: black;
 }
 
 header {
@@ -29,8 +31,8 @@ header a:link, a:visited {
 nav {  
   background-color: black;
   color: white;
-  padding-top: .5rem;
-  padding-bottom: .5rem;
+  padding-top: 1px;
+  padding-bottom: 1px;
 }
 
 nav a:link, button a:link {
@@ -63,6 +65,7 @@ h1 {
 
 footer {
   text-align: left;
+  margin-bottom: -1rem;
 }
 
 .siteName {
@@ -150,5 +153,60 @@ footer {
 }
 
 #bumper-caption {
-  padding-top: 10px;
+  margin-top: 25px;
+}
+
+
+@media screen and (min-width: 750px) {
+  body {
+    max-width: 90%;
+    align-items: center;
+    margin-left: 5%;
+    margin-top: 15px;
+    background-image: url("/images/site/checkerboard.jpg");
+    background-size: 40% 25%;
+  }
+
+  #wrapper {
+    background-color: white;
+    border: 6px solid darkslateblue;
+    border-radius: 10px;
+    padding: .5rem;
+  }
+
+  nav {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  #home-bottom-half {
+    display: flex;
+    padding: .25rem;
+    margin-top: 2rem;
+  }
+
+  div#reviews {order: 2}
+  div#upgrades {order: 1}
+
+  #upgrades, #reviews {
+    width: 50%;
+  }
+
+  #reviews h2, #upgrades h2 {
+    font-size: 20px;
+    padding-bottom: 1rem;
+  }
+
+  #reviews h2 {
+    margin-left: 1rem;
+  }
+
+  #reviews li {
+    padding-top: .5rem;
+  }
+
+  footer {
+    padding-top: 1rem;
+  }
+
 }
