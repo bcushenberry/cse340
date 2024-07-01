@@ -46,6 +46,11 @@ nav a:hover {
   padding: .25rem;
 }
 
+nav a:visited {
+  background-color: black;
+  color: white;
+}
+
 nav ul {
   display: grid;
   grid-row: 1;
