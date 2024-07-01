@@ -1,8 +1,8 @@
-CREATE TYPE public.test AS ENUM
+CREATE TYPE public.account_type AS ENUM
     ('Client', 'Employee', 'Admin');
 
-ALTER TYPE public.test
-    OWNER TO cse340;
+ALTER TYPE public.account_type
+    OWNER TO cse340dbbc;
 
 -- Table structure for table `classification`
 CREATE TABLE public.classification (
@@ -240,13 +240,28 @@ VALUES   (
   );
 
 
--- 4. Modify the "GM Hummer" record
-UPDATE inventory
-SET inv_description = REPLACE(inv_description, 'the small interiors', 'a huge interior')
-WHERE inv_model = 'Hummer';
+-- 4. Update GM Hummer description
+UPDATE public.inventory 
+	SET inv_description = REPLACE
+    (
+        inv_description,
+        'the small interiors',
+        'a huge interior'
+    )
+	WHERE inv_id = 10;
 
-
--- 6. Update file paths
-UPDATE inventory
-SET inv_image = REPLACE(inv_image, '/images/', '/images/vehicles/'),
-    inv_thumbnail = REPLACE(inv_thumbnail, '/images/', '/images/vehicles/');
+-- 6. Add /vehicles to file path for all records
+UPDATE public.inventory 
+	SET
+	inv_image = REPLACE
+  (
+        inv_image,
+        '/images/',
+        '/images/vehicles/'
+  ),
+	inv_thumbnail = REPLACE
+	(
+		inv_thumbnail,
+        '/images/',
+        '/images/vehicles/'
+	);
