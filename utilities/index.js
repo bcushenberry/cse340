@@ -57,6 +57,28 @@ Util.buildClassificationGrid = async function(data){
   return grid
 }
 
+Util.buildDetailsPage = async function(data){
+  let layout = '<section id="vehicle-display">'
+  if(data.length > 0){
+    data.forEach((vehicle => {
+      layout += '<h3>' + vehicle.inv_make + ' ' + vehicle.inv_model + ' Details' + '</h3>'
+      layout += '<img src="' + vehicle.inv_image + '" alt="Image of '+ vehicle.inv_make + ' ' + vehicle.inv_model 
+      +'">'
+      layout += '<ul id="vehicle-display-list>'
+      layout += '<li><h4>' + 'Price: ' + new Intl.NumberFormat('en-US').format(vehicle.inv_price) + '</h4></li>'
+      layout += '<li><h4>' + 'Description: ' + '</h4>' + vehicle.inv_description + '</li>'
+      layout += '<li><h4>' + 'Color: ' + '</h4>' + vehicle.inv_color + '</li>'
+      layout += '<li><h4>' + 'Miles: ' + '</h4>' + vehicle.inv_miles + '</li>'
+    }));
+    layout += '</ul>'
+    layout += '</section>'
+  } else { 
+    layout += '<p class="notice">Sorry, no matching vehicles could be found.</p>'
+  }
+  return layout
+}
+
+
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for 

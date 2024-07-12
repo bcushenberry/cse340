@@ -55,12 +55,18 @@ app.get("/", utilities.handleErrors(baseController.buildHome))
 // Inventory routes
 app.use("/inv", inventoryRoute)
 
+// Account routes
+//app.use("/account", require("./routes/accountRoute"))
+
+// Route to build login view
+//router.get("/login", utilities.handleErrors(accountController.buildLogin))
+
 /* ***********************
 * File Not Found Route (Must be last route in list)
 * Place after all routes
 *************************/
 app.use(async (req, res, next) => {
-  next({status: 404, message: "You're in uncharted territory! That page doesn't seem to exist."})
+  next({status: 404, message: "MISSING: Have you seen this resource? Because we haven't."})
 })
 
 /* ***********************

@@ -157,6 +157,42 @@ footer {
   margin-top: 25px;
 }
 
+#inv-display {
+  list-style-type: none;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+#inv-display a {
+  font-size: smaller;
+  text-decoration: none;
+  color: darkred;
+}
+
+#inv-display a:hover {
+  background-color: darkred;
+  color: white;
+}
+
+#inv-display li {
+  width: 250px;
+  height: 300px;
+  border-radius: 18px;
+  box-shadow: 4px 4px 20px rgba(0,0,0,0.4);
+  overflow: hidden;
+  transition: transform 0.4s;
+  margin: 1rem;
+  padding: 1rem;
+  transition: transform .2s;
+}
+
+
+
+#inv-display li:hover {
+  transform: scale(1.1);
+}
 
 @media screen and (min-width: 750px) {
   body {
