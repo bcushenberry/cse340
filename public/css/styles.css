@@ -188,10 +188,37 @@ footer {
   transition: transform .2s;
 }
 
-
-
 #inv-display li:hover {
   transform: scale(1.1);
+}
+
+#vehicle-details img {
+  width: 100%;
+  height: auto;
+}
+
+#details-list {
+  list-style-type: none;
+  text-align: left;
+  padding: 1rem;
+  padding-top: 0;
+}
+
+#details-list li {
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+  padding-left: .5rem;
+  margin-bottom: .5rem;
+  font-size: 18px;
+}
+
+#details-page-info h2, #details-list li:nth-child(even) {
+  background-color: #eee;
+}
+
+.detail-name {
+  font-weight: bold;
+  font-size: 20px;
 }
 
 @media screen and (min-width: 750px) {
@@ -240,6 +267,21 @@ footer {
 
   #reviews li {
     padding-top: .5rem;
+  }
+
+  #vehicle-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    text-align: left;
+    padding: .25rem;
+  }
+
+  #details-page-info {
+    margin-top: -1.5rem;
+  }
+
+  #details-page-info h2 {
+    margin-left: 1rem;
   }
 
   footer {

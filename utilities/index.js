@@ -57,25 +57,29 @@ Util.buildClassificationGrid = async function(data){
   return grid
 }
 
-Util.buildDetailsPage = async function(data){
-  let layout = '<section id="vehicle-display">'
-  if(data.length > 0){
+Util.builddetailsPage = async function(data){
+  let detailsPage = `<section id="vehicle-details">`;
+  if (data.length > 0) {
     data.forEach(vehicle => {
-      layout += '<h3>' + vehicle.inv_make + ' ' + vehicle.inv_model + ' Details' + '</h3>'
-      layout += '<img src="' + vehicle.inv_image + '" alt="Image of '+ vehicle.inv_make + ' ' + vehicle.inv_model 
-      +'">'
-      layout += '<ul id="vehicle-display-list>'
-      layout += '<li><h4>' + 'Price: ' + new Intl.NumberFormat('en-US').format(vehicle.inv_price) + '</h4></li>'
-      layout += '<li><h4>' + 'Description: ' + '</h4>' + vehicle.inv_description + '</li>'
-      layout += '<li><h4>' + 'Color: ' + '</h4>' + vehicle.inv_color + '</li>'
-      layout += '<li><h4>' + 'Miles: ' + '</h4>' + vehicle.inv_miles + '</li>'
+      detailsPage += 
+      `
+      <div id="details-page-img"><img src="${vehicle.inv_image}" alt="Image of a ${vehicle.inv_year} ${vehicle.inv_make} ${vehicle.inv_model}"></div>
+      <div id="details-page-info">
+      <h2>${vehicle.inv_make} ${vehicle.inv_model} Details</h2>
+        <ul id="details-list">
+          <li><span class="detail-name">Price:</span> $${new Intl.NumberFormat('en-US').format(vehicle.inv_price)}</li>
+          <li><span class="detail-name">Description:</span> ${vehicle.inv_description}</li>
+          <li><span class="detail-name">Color:</span> ${vehicle.inv_color}</li>
+          <li><span class="detail-name">Miles:</span> ${new Intl.NumberFormat('en-US').format(vehicle.inv_miles)}</li>
+        </ul>
+      </div>
+      `;
     });
-    layout += '</ul>'
-    layout += '</section>'
-  } else { 
-    layout += '<p class="notice">Sorry, no matching vehicles could be found.</p>'
-  }
-  return layout
+    } else { 
+      detailsPage += '<p class="notice">Sorry, no matching vehicles could be found.</p>'
+    }
+  detailsPage += `</section>`;
+  return detailsPage
 }
 
 
