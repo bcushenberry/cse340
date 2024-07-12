@@ -60,7 +60,7 @@ Util.buildClassificationGrid = async function(data){
 Util.buildDetailsPage = async function(data){
   let layout = '<section id="vehicle-display">'
   if(data.length > 0){
-    data.forEach((vehicle => {
+    data.forEach(vehicle => {
       layout += '<h3>' + vehicle.inv_make + ' ' + vehicle.inv_model + ' Details' + '</h3>'
       layout += '<img src="' + vehicle.inv_image + '" alt="Image of '+ vehicle.inv_make + ' ' + vehicle.inv_model 
       +'">'
@@ -69,7 +69,7 @@ Util.buildDetailsPage = async function(data){
       layout += '<li><h4>' + 'Description: ' + '</h4>' + vehicle.inv_description + '</li>'
       layout += '<li><h4>' + 'Color: ' + '</h4>' + vehicle.inv_color + '</li>'
       layout += '<li><h4>' + 'Miles: ' + '</h4>' + vehicle.inv_miles + '</li>'
-    }));
+    });
     layout += '</ul>'
     layout += '</section>'
   } else { 
