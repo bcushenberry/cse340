@@ -5,16 +5,16 @@
 /* ***********************
  * Require Statements
  *************************/
-const express = require("express")
-const env = require("dotenv").config()
-const app = express()
-const static = require("./routes/static")
-const expressLayouts = require("express-ejs-layouts")
-const baseController = require("./controllers/baseController")
-const inventoryRoute = require("./routes/inventoryRoute")
-const utilities = require("./utilities/")
-const session = require("express-session")
-const pool = require('./database/')
+const express = require("express");
+const env = require("dotenv").config();
+const app = express();
+const static = require("./routes/static");
+const expressLayouts = require("express-ejs-layouts");
+const baseController = require("./controllers/baseController");
+//const inventoryRoute = require("./routes/inventoryRoute");
+const utilities = require("./utilities/");
+const session = require("express-session");
+const pool = require('./database/');
 
 /* ***********************
  * Middleware
@@ -53,7 +53,10 @@ app.use(static)
 app.get("/", utilities.handleErrors(baseController.buildHome))
 
 // Inventory routes
-app.use("/inv", inventoryRoute)
+app.use("/inv", require("./routes/inventoryRoute"))
+
+// Trigger Error Route
+app.use("/trigger", require("./routes/triggerErrorRoute"))
 
 // Account routes
 //app.use("/account", require("./routes/accountRoute"))

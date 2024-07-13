@@ -1,4 +1,4 @@
-const invModel = require("../models/inventory-model")
+const invModel = require("../models/inventoryModel")
 const Util = {}
 
 /* ************************
@@ -57,6 +57,9 @@ Util.buildClassificationGrid = async function(data){
   return grid
 }
 
+/* **************************************
+* Build the details view HTML
+* ************************************ */
 Util.builddetailsPage = async function(data){
   let detailsPage = `<section id="vehicle-details">`;
   if (data.length > 0) {
@@ -82,7 +85,7 @@ Util.builddetailsPage = async function(data){
   return detailsPage
 }
 
-
+  
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for 
