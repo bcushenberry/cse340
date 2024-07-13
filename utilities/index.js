@@ -30,31 +30,29 @@ Util.getNav = async function (req, res, next) {
 Util.buildClassificationGrid = async function(data){
   let grid
   if(data.length > 0){
-    grid = '<ul id="inv-display">'
-    data.forEach(vehicle => { 
-      grid += '<li>'
-      grid +=  '<a href="../../inv/detail/'+ vehicle.inv_id 
-      + '" title="View ' + vehicle.inv_make + ' '+ vehicle.inv_model 
-      + 'details"><img src="' + vehicle.inv_thumbnail 
-      +'" alt="Image of '+ vehicle.inv_make + ' ' + vehicle.inv_model 
-      +' on CSE Motors" /></a>'
-      grid += '<div class="namePrice">'
-      grid += '<hr />'
-      grid += '<h2>'
-      grid += '<a href="../../inv/detail/' + vehicle.inv_id +'" title="View ' 
-      + vehicle.inv_make + ' ' + vehicle.inv_model + ' details">' 
-      + vehicle.inv_make + ' ' + vehicle.inv_model + '</a>'
-      grid += '</h2>'
-      grid += '<span>$' 
-      + new Intl.NumberFormat('en-US').format(vehicle.inv_price) + '</span>'
-      grid += '</div>'
-      grid += '</li>'
-    })
-    grid += '</ul>'
-  } else { 
-    grid += '<p class="notice">Sorry, no matching vehicles could be found.</p>'
+    grid = `<ul id="inv-display">`;
+    data.forEach(vehicle => {
+      grid += `
+        <li>
+          <a href="../../inv/detail/${vehicle.inv_id}" title="View ${vehicle.inv_make} ${vehicle.inv_model} details">
+            <img src="${vehicle.inv_thumbnail}" alt="A ${vehicle.inv_make} ${vehicle.inv_model} from ${vehicle.inv_year}">
+          </a>
+          <div id="namePrice">
+            <hr>
+            <h2>
+              <a href="../../inv/detail/${vehicle.inv_id}" title="View ${vehicle.inv_make} ${vehicle.inv_model} details">
+                ${vehicle.inv_make} ${vehicle.inv_model}
+              </a>
+            </h2>
+            <span>$${new Intl.NumberFormat('en-US').format(vehicle.inv_price)}</span>
+          </div>
+        </li>`;
+    });
+    grid += `</ul>`;
+  } else {
+    grid = `<p class="notice">Sorry, no matching vehicles could be found.</p>`;
   }
-  return grid
+  return grid;
 }
 
 /* **************************************
@@ -66,7 +64,7 @@ Util.builddetailsPage = async function(data){
     data.forEach(vehicle => {
       detailsPage += 
       `
-      <div id="details-page-img"><img src="${vehicle.inv_image}" alt="Image of a ${vehicle.inv_year} ${vehicle.inv_make} ${vehicle.inv_model}"></div>
+      <div id="details-page-img"><img src="${vehicle.inv_image}" alt="A ${vehicle.inv_year} ${vehicle.inv_make} ${vehicle.inv_model}"></div>
       <div id="details-page-info">
       <h2>${vehicle.inv_make} ${vehicle.inv_model} Details</h2>
         <ul id="details-list">
