@@ -11,10 +11,11 @@ const app = express();
 const static = require("./routes/static");
 const expressLayouts = require("express-ejs-layouts");
 const baseController = require("./controllers/baseController");
-//const inventoryRoute = require("./routes/inventoryRoute");
 const utilities = require("./utilities/");
 const session = require("express-session");
 const pool = require('./database/');
+const bodyParser = require("body-parser");
+const { body } = require("express-validator");
 
 /* ***********************
  * Middleware
@@ -37,6 +38,9 @@ app.use(function(req, res, next){
   next()
 })
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
 /* ***********************
  * View Engine and Templates
  *************************/
@@ -55,11 +59,11 @@ app.get("/", utilities.handleErrors(baseController.buildHome))
 // Inventory routes
 app.use("/inv", require("./routes/inventoryRoute"))
 
-// Trigger Error Route
+// Trigger-error routes
 app.use("/trigger", require("./routes/triggerErrorRoute"))
 
 // Account routes
-//app.use("/account", require("./routes/accountRoute"))
+app.use("/account", require("./routes/accountRoute"))
 
 // Route to build login view
 //router.get("/login", utilities.handleErrors(accountController.buildLogin))

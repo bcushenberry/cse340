@@ -1,0 +1,24 @@
+<% if (title) { %>
+    <h1><%= title %></h1>
+    <% } else {
+      res.redirect('/')
+    } %>
+
+<!-- Message Block -->
+<%- messages() %>
+
+<form class="account-forms" action="/account/register" method="post">
+    <label for="account-firstname">First Name:
+        <input type="text" name="account_firstname" id="account-firstname" required value="<%= locals.account_firstname %>">
+    </label>
+    <label for="account-lastname">Last Name: 
+        <input type="text" name="account_lastname" id="account-lastname" required value="<%= locals.account_lastname %>">        
+    </label>
+    <label for="account-email">Email: 
+        <input type="email" name="account_email" id="account-email" required value="<%= locals.account_email %>">        
+    </label>
+    <label for="account-password">Password: 
+        <input type="password" name="account_password" id="account-password" required pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!*.\s).{12,}$" value="<%= locals.account_password %>">        
+    </label>
+    <button class="account-button" type="submit" value="Register">Register</button>
+</form>
