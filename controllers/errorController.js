@@ -4,7 +4,7 @@ const utilities = require("../utilities/")
 const errorControl = {}
 
 errorControl.triggerError = async function (req, res, next) {
-  console.log('Route handler invoked for /detail/:invId');
+//  console.log('Route handler invoked for /detail/:invId');
   const inv_id = req.params.invId
   const data = await invModel.getVehicleDetailsByInvId(inv_id)
   const detailsPage = await utilities.builddetailsPage(data)
@@ -14,6 +14,7 @@ errorControl.triggerError = async function (req, res, next) {
     title: vehicleName, 
     nav, 
     detailsPage,
+    errors: null,
   })
 }
 

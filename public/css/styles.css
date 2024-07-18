@@ -5,8 +5,8 @@
 }
 
 body {
-  text-align: center;
-  justify-content: center;
+/*   text-align: center;
+  justify-content: center; */
   font-family: "Montserrat", Helvetica, sans-serif;
   max-width: 95%;
   background-color: white;
@@ -229,32 +229,19 @@ footer p {
 .account-forms {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  margin: 1rem;
-  margin-left: .25rem;
+  width: 300px;
+  margin: 0 auto;
   padding-top: 1rem;
   padding-left: 1rem;
 }
 
-.account-forms label {
-  line-height: 26px;
-  margin-left: -1rem;
-  margin-bottom: 10px;
-}
-
 .account-forms input {
-  height: 20px;
-  flex: 0 0 200px;
-  margin-left: 10px;
+  height: 1.5rem;
+  margin-bottom: .5rem;
 }
 
-#account-firstname, #account-lastname {
-  margin-left: 10px;
-  margin-right: 7px;
-}
-
-#account-email {
-  margin-right: -2rem;
+#signup-prompt {
+  text-align: center;
 }
 
 .account-button {
@@ -267,6 +254,20 @@ footer p {
   padding: .5rem;
   width: 7.5rem;
   margin: 0 auto;
+  margin-top: 1rem;
+}
+
+.admin-button {
+  border: none;
+  background-color: darkred;
+  color: white;
+  font-weight: bold;
+  font-size: large;
+  border-radius: 20px;
+  padding: .5rem;
+  width: 12.5rem;
+  margin: 0 auto;
+  margin-top: 1rem;
 }
 
 @media screen and (min-width: 750px) {
