@@ -41,8 +41,10 @@ invControl.buildByInvId = async function (req, res, next) {
 invControl.buildAdminView = async function (req, res, next) {
   const adminPage = await utilities.buildAdminPage();
   let nav = await utilities.getNav();
+  req.flash("notice", "To add a new classification or item, please press the corresponding button.")
+  req.flash("bad-notice", "Note: the delete buttons are still works in progress.")
   res.render("./inventory/admin", {
-    title: "Admin Page",
+    title: "Inventory Management Page",
     nav,
     adminPage,
   });
@@ -88,10 +90,10 @@ invControl.addClassification = async function (req, res, next) {
   const classification_name = req.body.classification_name;
   const addClass = await invModel.addClassificationToDb(classification_name);
   if (addClass) {
-    req.flash("notice", "Classification added.");
+    req.flash("notice", "Classification successfully added!");
     res.redirect("./admin");
   } else {
-    req.flash("notice", "Failed to add classification.");
+    req.flash("bad-notice", "Failed to add classification.");
     res.redirect("./add-classification");
   }
 };
@@ -100,7 +102,7 @@ invControl.addClassification = async function (req, res, next) {
 invControl.deleteClassification = async function (req, res, next) {
   const classification_name = req.body.classification_name;
   if (!classification_name) {
-    req.flash("notice", "Classification name is required.");
+    req.flash("bad-notice", "Classification name is required.");
     return res.redirect("./delete-classification");
   }
 
@@ -109,13 +111,10 @@ invControl.deleteClassification = async function (req, res, next) {
   );
 
   if (deleteClass.rowCount) {
-    req.flash("notice", "Classification deleted.");
+    req.flash("notice", "Classification successfully deleted.");
     res.redirect("./admin");
   } else {
-    req.flash(
-      "notice",
-      "Failed to delete classification. Perhaps there was a typo?"
-    );
+    req.flash("bad-notice", "Failed to delete classification. Perhaps there was a typo?");
     res.redirect("./delete-classification");
   }
 };
@@ -147,10 +146,10 @@ invControl.addInventory = async function (req, res, next) {
   });
 
   if (addItem) {
-    req.flash("notice", "Item added.");
+    req.flash("notice", "Item successfully added to inventory!");
     res.redirect("./admin");
   } else {
-    req.flash("notice", "Failed to add item.");
+    req.flash("bad-notice", "Failed to add item.");
     res.redirect("./add-inventory");
   }
 };
@@ -159,7 +158,7 @@ invControl.addInventory = async function (req, res, next) {
 invControl.deleteInventory = async function (req, res, next) {
   const inv_id = req.body.inv_id;
   if (!inv_id) {
-    req.flash("notice", "Item ID is required.");
+    req.flash("bad-notice", "Item ID is required.");
     return res.redirect("./delete-inventory");
   }
 
@@ -168,13 +167,10 @@ invControl.deleteInventory = async function (req, res, next) {
   );
 
   if (deleteItem.rowCount) {
-    req.flash("notice", "Item deleted.");
+    req.flash("notice", "Item successfully deleted from inventory.");
     res.redirect("./admin");
   } else {
-    req.flash(
-      "notice",
-      "Failed to delete item. Perhaps there was a typo?"
-    );
+    req.flash("bad-notice","Failed to delete item. Perhaps there was a typo?");
     res.redirect("./delete-inventory");
   }
 };

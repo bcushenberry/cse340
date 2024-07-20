@@ -9,7 +9,7 @@
 <%- messages() %>
 
 <% if (errors) { %>
-    <ul class="notice">
+    <ul class="bad-notice">
     <% errors.array().forEach(error => { %>
         <li><%= error.msg %></li>
     <%  }) %>
@@ -18,7 +18,7 @@
 
 <form class="account-forms" action="/inv/add-classification" method="post">
     <label for="classification-name">Classification Name</label>
-    <input type="text" name="classification_name" id="classification-name" required pattern="^[a-zA-Z0-9]{3,}$" value="<%= locals.classification_name %>>
-    <span>*Classification names cannot contain any spaces or special characters</span>
+    <input type="text" name="classification_name" id="classification-name" required pattern="^[a-zA-Z]{2,}$" value="<%= locals.classification_name %>">
+    <span>*Classification names must be at least two letters. No spaces or special characters are allowed.</span>
     <button class="admin-button" type="submit" value="Add Classification">Add Classification</button>
 </form>

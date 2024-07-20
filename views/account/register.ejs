@@ -8,7 +8,7 @@
 <%- messages() %>
 
 <% if (errors) { %>
-    <ul class="notice">
+    <ul class="bad-notice">
     <% errors.array().forEach(error => { %>
         <li><%= error.msg %></li>
     <%  }) %>

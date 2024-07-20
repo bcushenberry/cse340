@@ -22,6 +22,7 @@ async function buildRegister(req, res, next) {
   res.render("account/register", {
     title: "Register",
     nav,
+    errors: null, 
   })
 }
 
@@ -38,7 +39,7 @@ async function registerAccount(req, res) {
       // regular password and cost (salt is generated automatically)
       hashedPassword = await bcrypt.hashSync(account_password, 10)
     } catch (error) {
-      req.flash("notice", 'Sorry, there was an error processing the registration.')
+      req.flash("bad-notice", 'Sorry, there was an error processing the registration.')
       res.status(500).render("account/register", {
         title: "Registration",
         nav,
@@ -54,17 +55,14 @@ async function registerAccount(req, res) {
     )
   
     if (regResult) {
-      req.flash(
-        "notice",
-        `Congratulations, you\'re registered ${account_firstname}. Please log in.`
-      )
+      req.flash("notice",`Congratulations, you\'re registered ${account_firstname}. Please log in.`)
       res.status(201).render("account/login", {
         title: "Login",
         nav,
         errors: null,
       })
     } else {
-      req.flash("notice", "Sorry, the registration failed.")
+      req.flash("bad-notice", "Sorry, the registration failed.")
       res.status(501).render("account/register", {
         title: "Registration",
         nav,

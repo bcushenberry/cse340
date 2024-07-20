@@ -270,6 +270,16 @@ footer p {
   margin-top: 1rem;
 }
 
+.notice {
+  margin: 0 auto;
+}
+
+.bad-notice {
+  color: darkred;
+  margin: 0 auto;
+  font-weight: bold;
+}
+
 @media screen and (min-width: 750px) {
   body {
     max-width: 90%;

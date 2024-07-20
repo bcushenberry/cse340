@@ -12,20 +12,18 @@ validate.registationRules = () => {
     body("account_firstname")
       .trim()
       .escape()
-      .notEmpty()
       .isLength({ min: 1 })
-      .withMessage("Please provide a first name."), // on error this message is sent.
+      .withMessage("First name must contain one or more characters."), // on error this message is sent.
 
     // lastname is required and must be string
     body("account_lastname")
       .trim()
       .escape()
-      .notEmpty()
       .isLength({ min: 2 })
-      .withMessage("Please provide a last name."), // on error this message is sent.
+      .withMessage("Last name must contain two or more characters."), // on error this message is sent.
 
-      // valid email is required and cannot already exist in the database
-      body("account_email")
+    // valid email is required and cannot already exist in the database
+    body("account_email")
       .trim()
       .isEmail()
       .normalizeEmail() // refer to validator.js docs
@@ -35,12 +33,10 @@ validate.registationRules = () => {
           if (emailExists){
           throw new Error("Email exists. Please log in or use different email")
           }
-      }),
-
+    }),
     // password is required and must be strong password
     body("account_password")
       .trim()
-      .notEmpty()
       .isStrongPassword({
         minLength: 12,
         minLowercase: 1,
