@@ -11,12 +11,14 @@ validate.inventoryRules = () => {
     body("classification_id")
       .trim()
       .escape()
+      .isString()
       .notEmpty()
       .withMessage("Please provide a classification."),
 
     body("inv_make")
       .trim()
       .escape()
+      .isString()
       .notEmpty()
       .withMessage("Please provide a car make.")
       .matches(/^[a-zA-Z0-9]+$/)
@@ -25,6 +27,7 @@ validate.inventoryRules = () => {
     body("inv_model")
       .trim()
       .escape()
+      .isString()
       .notEmpty()
       .withMessage("Please provide a car model.")
       .matches(/^[a-zA-Z0-9][a-zA-Z0-9\s]+$/)
@@ -41,24 +44,27 @@ validate.inventoryRules = () => {
     body("inv_description")
       .trim()
       .escape()
+      .isString()
       .isLength({ min: 5 })
       .withMessage("Please provide a description of at least 5 characters."),
 
     body("inv_image")
       .trim()
       .escape()
+      .isString()
       .notEmpty()
       .withMessage("Please provide a path for the image.")
       .matches(/^\/images\/vehicles\/[a-zA-Z0-9_-]+\.(png|jpg|jpeg|webp)$/)
-      .withMessage("Please make sure the path is an image in /images/vehicles/"),
+      .withMessage("Ensure the path is an image in /images/vehicles/"),
 
     body("inv_thumbnail")
       .trim()
       .escape()
+      .isString()
       .notEmpty()
       .withMessage("Please provide a path for the thumbnail.")
       .matches(/^\/images\/vehicles\/[a-zA-Z0-9_-]+\.(png|jpg|jpeg|webp)$/)
-      .withMessage("Please make sure the path is a thumbnail in /images/vehicles/"),
+      .withMessage("Ensure the path is a thumbnail in /images/vehicles/"),
 
     body("inv_price")
       .trim()
@@ -79,10 +85,11 @@ validate.inventoryRules = () => {
     body("inv_color")
       .trim()
       .escape()
+      .isString()
       .notEmpty()
       .withMessage("Please provide a color for the car.")
       .matches(/^[a-zA-Z][a-zA-Z\s]+$/)
-      .withMessage("The color must contain on letters and spaces.")
+      .withMessage("The color must contain only letters and spaces.")
   ]
 }
 
@@ -92,6 +99,7 @@ validate.classificationRules = () => {
     body("classification_name")
       .trim()
       .escape()
+      .isString()
       .isLength({ min: 2 })
       .withMessage("The classification name must be at least two letters long.")
       .matches(/^[a-zA-Z]+$/)
