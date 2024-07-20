@@ -53,18 +53,20 @@ validate.inventoryRules = () => {
       .escape()
       .isString()
       .notEmpty()
-      .withMessage("Please provide a path for the image.")
+      .withMessage("Please provide a path for the image."),
+/* A part of me wants to make this sort of validation, but it gets very tricky with HTML decoding, so I've left this out for now and may revisit it as a "stretch" goal
       .matches(/^\/images\/vehicles\/[a-zA-Z0-9_-]+\.(png|jpg|jpeg|webp)$/)
-      .withMessage("Ensure the path is an image in /images/vehicles/"),
+      .withMessage("Ensure the path is an image in /images/vehicles/"), */
 
     body("inv_thumbnail")
       .trim()
       .escape()
       .isString()
       .notEmpty()
-      .withMessage("Please provide a path for the thumbnail.")
-      .matches(/^\/images\/vehicles\/[a-zA-Z0-9_-]+\.(png|jpg|jpeg|webp)$/)
-      .withMessage("Ensure the path is a thumbnail in /images/vehicles/"),
+      .withMessage("Please provide a path for the thumbnail."),
+/* A part of me wants to make this sort of validation, but it gets very tricky with HTML decoding, so I've left this out for now and may revisit it as a "stretch" goal
+      .matches(/^/+"/images/vehicles/"+/[a-zA-Z0-9_-]+/+"."+/(png|jpg|jpeg|webp)$/)
+      .withMessage("Ensure the path is a thumbnail in /images/vehicles/"), */
 
     body("inv_price")
       .trim()
