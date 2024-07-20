@@ -1,0 +1,37 @@
+<!-- Content Heading -->
+<% if (title) { %>
+<h1><%= title %></h1>
+<% } else { res.redirect('/') } %>
+
+<!-- Message Block -->
+<%- messages() %> <% if (errors) { %>
+<ul class="notice">
+  <% errors.array().forEach(error => { %>
+  <li><%= error.msg %></li>
+  <% }) %>
+</ul>
+<% } %>
+
+<form class="account-forms" action="/inv/add-inventory" method="post">
+  <label for="classification-name">Classification</label>
+  <%- classificationList %>
+  <label for="inv-make">Make</label>
+  <input type="text" name="inv_make" id="inv-make" required pattern="^[a-zA-Z0-9]+$" value="<%= locals.inv_make %>">
+  <label for="inv-model">Model</label>
+  <input type="text" name="inv_model" id="inv-model" required pattern="^[a-zA-Z0-9][a-zA-Z0-9\s]+$" value="<%= locals.inv_model %>">
+  <label for="inv-year">Year</label>
+  <input type="text" name="inv_year" id="inv-year" required pattern="^\d{4}$" value="<%= locals.inv_year %>">
+  <label for="inv-miles">Miles</label>
+  <input type="text" name="inv_miles" id="inv-miles" required pattern="^\d{1,6}$" value="<%= locals.inv_miles %>">
+  <label for="inv-color">Color</label>
+  <input type="text" name="inv_color" id="inv-color" required pattern="^[a-zA-Z0-9\s]+$" value="<%= locals.inv_color %>">
+  <label for="inv-description">Description</label>
+  <input type="text" name="inv_description" id="inv-description" required pattern="^[a-zA-Z0-9][a-zA-Z0-9\s]{4,}$" value="<%= locals.inv_description %>">
+  <label for="inv-inv_image">Image</label>
+  <input type="text" name="inv_image" id="inv-inv_image" required pattern="^\/images\/vehicles\/[a-zA-Z0-9_-]+\.(png|jpg|jpeg|webp)$" value="<%= locals.inv_image %>">
+  <label for="inv-thumbnail">Thumbnail</label>
+  <input type="text" name="inv_thumbnail" id="inv-thumbnail" required pattern="^\/images\/vehicles\/[a-zA-Z0-9_-]+\.(png|jpg|jpeg|webp)$" value="<%= locals.inv_thumbnail %>">
+  <label for="inv-price">Price</label>
+  <input type="text" name="inv_price" id="inv-price" required pattern="^\d{1,9}$" value="<%= locals.inv_price %>">
+  <button class="admin-button" type="submit" value="Add Item">Add Item</button>
+</form>

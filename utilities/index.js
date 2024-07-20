@@ -64,6 +64,28 @@ Util.buildClassificationGrid = async function (data) {
 };
 
 /* **************************************
+ * Build the classification drop-down list
+ * ************************************ */
+Util.buildClassificationList = async function (classification_id = null) {
+  let data = await invModel.getClassifications()
+  let classificationList =
+    '<select name="classification_id" id="classification-list" value="<%= locals.classification_id %>" required>'
+  classificationList += "<option value=''>Choose a Classification</option>"
+  data.rows.forEach((row) => {
+    classificationList += '<option value="' + row.classification_id + '"'
+    if (
+      classification_id != null &&
+      row.classification_id == classification_id
+    ) {
+      classificationList += " selected "
+    }
+    classificationList += ">" + row.classification_name + "</option>"
+  })
+  classificationList += "</select>"
+  return classificationList;
+}
+
+/* **************************************
  * Build the details view HTML
  * ************************************ */
 Util.builddetailsPage = async function (data) {
@@ -112,11 +134,11 @@ Util.buildAdminPage = async function () {
       <button class="admin-button" type="submit" value="Delete Classification">Delete Classification</button>
   </form>
 
-  <form class="account-forms" action="/inv/add-item" method="get">
+  <form class="account-forms" action="/inv/add-inventory" method="get">
       <button class="admin-button" type="submit" value="Add Inventory Item">Add Inventory Item</button>
   </form>
 
-  <form class="account-forms" action="/inv/delete-item" method="get">
+  <form class="account-forms" action="/inv/delete-inventory" method="get">
     <button class="admin-button" type="submit" value="Delete Inventory Item">Delete Inventory Item</button>
   </form>
   `;

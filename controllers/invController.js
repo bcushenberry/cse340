@@ -58,12 +58,15 @@ invControl.buildAddClassificationView = async function (req, res, next) {
   });
 };
 
-// Build Add Item view
-invControl.buildAddItemView = async function (req, res, next) {
+// Build Add Inventory view
+invControl.buildAddInventoryView = async function (req, res, next) {
+  const classificationList = await utilities.buildClassificationList();
   let nav = await utilities.getNav();
-  res.render("./inventory/add-item", {
+  res.render("./inventory/add-inventory", {
     title: "Add New Inventory",
     nav,
+    classificationList,
+    errors: null,
   });
 };
 
@@ -80,35 +83,99 @@ invControl.buildDeleteClassificationView = async function (req, res, next) {
 /* ***************************
  *  Model Interfacing Functions (POST)
  * ************************** */
-
+// Add new classificaiton
 invControl.addClassification = async function (req, res, next) {
   const classification_name = req.body.classification_name;
-  console.log("Classification Name:", classification_name);
-  const addClass = await invModel.addNewClassification(classification_name);
+  const addClass = await invModel.addClassificationToDb(classification_name);
   if (addClass) {
     req.flash("notice", "Classification added.");
     res.redirect("./admin");
   } else {
     req.flash("notice", "Failed to add classification.");
+    res.redirect("./add-classification");
   }
 };
 
+// Delete classificaiton
 invControl.deleteClassification = async function (req, res, next) {
   const classification_name = req.body.classification_name;
-  console.log("Classification Name to Delete:", classification_name);
   if (!classification_name) {
     req.flash("notice", "Classification name is required.");
     return res.redirect("./delete-classification");
   }
 
-  const deleteClass = await invModel.deleteClassification(classification_name);
+  const deleteClass = await invModel.deleteClassificationFromDb(
+    classification_name
+  );
 
   if (deleteClass.rowCount) {
     req.flash("notice", "Classification deleted.");
     res.redirect("./admin");
   } else {
-    req.flash("notice", "Failed to delete classification. Perhaps there was a typo?");
+    req.flash(
+      "notice",
+      "Failed to delete classification. Perhaps there was a typo?"
+    );
     res.redirect("./delete-classification");
+  }
+};
+
+// Add new inventory item
+invControl.addInventory = async function (req, res, next) {
+  const { inv_make,
+    inv_model,
+    inv_year,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_miles,
+    inv_color,
+    classification_id } = req.body;
+
+  const addItem = await invModel.addNewInventoryToDb({
+    inv_make,
+    inv_model,
+    inv_year,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_miles,
+    inv_color,
+    classification_id
+  });
+
+  if (addItem) {
+    req.flash("notice", "Item added.");
+    res.redirect("./admin");
+  } else {
+    req.flash("notice", "Failed to add item.");
+    res.redirect("./add-inventory");
+  }
+};
+
+// Delete inventory item
+invControl.deleteInventory = async function (req, res, next) {
+  const inv_id = req.body.inv_id;
+  if (!inv_id) {
+    req.flash("notice", "Item ID is required.");
+    return res.redirect("./delete-inventory");
+  }
+
+  const deleteItem = await invModel.deleteInventoryFromDb(
+    classification_name
+  );
+
+  if (deleteItem.rowCount) {
+    req.flash("notice", "Item deleted.");
+    res.redirect("./admin");
+  } else {
+    req.flash(
+      "notice",
+      "Failed to delete item. Perhaps there was a typo?"
+    );
+    res.redirect("./delete-inventory");
   }
 };
 

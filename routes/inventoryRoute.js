@@ -17,7 +17,10 @@ router.get(
 );
 
 // Route to build admin view
-router.get("/admin", utilities.handleErrors(invController.buildAdminView));
+router.get(
+  "/admin",
+  utilities.handleErrors(invController.buildAdminView)
+);
 
 // Route to build the Add Classification view
 router.get(
@@ -25,17 +28,20 @@ router.get(
   utilities.handleErrors(invController.buildAddClassificationView)
 );
 
-// Route to build the Add Item view
-//router.get("/add-item", utilities.handleErrors(invController.buildAddItemView));
-
 // Route to build the Delete Classification view
 router.get(
   "/delete-classification",
   utilities.handleErrors(invController.buildDeleteClassificationView)
 );
 
-// Route to build the Delete Item view
-//router.get("/delete-item", utilities.handleErrors(invController.buildDeleteItemView));
+// Route to build the Add Inventory view
+router.get(
+  "/add-inventory",
+  utilities.handleErrors(invController.buildAddInventoryView)
+);
+
+// Route to build the Delete Inventory view
+//router.get("/delete-inventory", utilities.handleErrors(invController.buildDeleteInventoryView));
 
 // Route to add a new classification
 router.post(
@@ -45,9 +51,6 @@ router.post(
   utilities.handleErrors(invController.addClassification)
 );
 
-// Route to add a new item
-//router.post("/add-item", invValidate.invItemRules(), invValidate.checkAddClassificationData, utilities.handleErrors(invController.addItem));
-
 // Route to delete a classification
 router.post(
   "/delete-classification",
@@ -56,7 +59,20 @@ router.post(
   utilities.handleErrors(invController.deleteClassification)
 );
 
+// Route to add a new item
+router.post(
+  "/add-inventory",
+  invValidate.inventoryRules(),
+  invValidate.checkAddInventoryData,
+  utilities.handleErrors(invController.addInventory)
+);
+
 // Route to delete an item
-//router.post("/delete-item", utilities.handleErrors(invController.deleteItem));
+router.post(
+  "/delete-inventory",
+  invValidate.inventoryRules(),
+  invValidate.checkAddInventoryData,
+  utilities.handleErrors(invController.deleteInventory)
+);
 
 module.exports = router;
