@@ -290,6 +290,33 @@ select {
   font-weight: bold;
 }
 
+table {
+  width: 50%;
+  border-collapse: collapse;
+  margin: 20px auto;
+  font-size: 18px;
+  text-align: left;
+  align-self: center;
+}
+
+th, td {
+  padding: 12px;
+  border: 1px solid darkred;
+}
+
+th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tr:hover {
+  background-color: #f1f1f1;
+}
+
 @media screen and (min-width: 750px) {
   body {
     max-width: 90%;

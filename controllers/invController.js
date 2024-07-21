@@ -41,12 +41,14 @@ invControl.buildByInvId = async function (req, res, next) {
 invControl.buildAdminView = async function (req, res, next) {
   const adminPage = await utilities.buildAdminPage();
   let nav = await utilities.getNav();
+  const classificationSelect = await utilities.buildClassificationList();
   req.flash("notice", "To add a new classification or item, please press the corresponding button.")
   req.flash("bad-notice", "Note: the delete buttons are still works in progress.")
   res.render("./inventory/admin", {
     title: "Inventory Management Page",
     nav,
     adminPage,
+    classificationSelect,
   });
 };
 
@@ -174,5 +176,18 @@ invControl.deleteInventory = async function (req, res, next) {
     res.redirect("./delete-inventory");
   }
 };
+
+/* ***************************
+ *  Return Inventory by Classification As JSON
+ * ************************** */
+invControl.getInventoryJSON = async (req, res, next) => {
+  const classification_id = parseInt(req.params.classification_id)
+  const invData = await invModel.getInventoryByClassificationId(classification_id)
+  if (invData[0].inv_id) {
+    return res.json(invData)
+  } else {
+    next(new Error("No data returned"))
+  }
+}
 
 module.exports = invControl;

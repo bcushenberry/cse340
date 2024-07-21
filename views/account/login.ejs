@@ -7,6 +7,14 @@
 <!-- Message Block -->
 <%- messages() %>
 
+<% if (errors) { %>
+  <ul class="bad-notice">
+  <% errors.array().forEach(error => { %>
+      <li><%= error.msg %></li>
+  <%  }) %>
+  </ul>
+<% } %>
+
 <form class="account-forms" action="/account/login" method="post">
   <label for="account-email">Email</label>
   <input type="email" name="account_email" id="account-email" required value="<%= locals.account_email %>">

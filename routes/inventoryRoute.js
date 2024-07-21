@@ -43,6 +43,11 @@ router.get(
 // Route to build the Delete Inventory view
 //router.get("/delete-inventory", utilities.handleErrors(invController.buildDeleteInventoryView));
 
+router.get(
+  "/getInventory/:classification_id",
+  utilities.handleErrors(invController.getInventoryJSON)
+);
+
 // Route to add a new classification
 router.post(
   "/add-classification",
