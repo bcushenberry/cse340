@@ -1,0 +1,42 @@
+<!-- Content Heading -->
+<% if (title) { %>
+    <h1><%= title %></h1>
+    <% } else { res.redirect('/') } %>
+    
+<!-- Message Block -->
+<%- messages() %> <% if (errors) { %>
+  <ul class="bad-notice">
+    <% errors.array().forEach(error => { %>
+    <li><%= error.msg %></li>
+    <% }) %>
+  </ul>
+<% } %>
+
+<form class="account-forms" id="updateForm" action="/inv/edit-inventory" method="post">
+  <label for="classification-name">Classification</label>
+  <%- classificationSelect %>
+  <label for="inv-make">Make (alphanumeric only)</label>
+  <input type="text" name="inv_make" id="inv-make" required pattern="^[a-zA-Z0-9]+$" value="<%= locals.inv_make %>">
+  <label for="inv-model">Model (alphanumeric only)</label>
+  <input type="text" name="inv_model" id="inv-model" required pattern="^[a-zA-Z0-9][a-zA-Z0-9\s]+$" value="<%= locals.inv_model %>">
+  <label for="inv-year">Year (yyyy)</label>
+  <input type="text" name="inv_year" id="inv-year" required pattern="^\d{4}$" value="<%= locals.inv_year %>">
+  <label for="inv-miles">Miles (1-6 digits)</label>
+  <input type="text" name="inv_miles" id="inv-miles" required pattern="^\d{1,6}$" value="<%= locals.inv_miles %>">
+  <label for="inv-color">Color (alphabetic + spaces)</label>
+  <input type="text" name="inv_color" id="inv-color" required pattern="^[a-zA-Z][a-zA-Z\s]+$" value="<%= locals.inv_color %>">
+  <label for="inv-description">Description (5+ characters)</label>
+  <input type="text" name="inv_description" id="inv-description" required pattern="^{5,}$" value="<%= locals.inv_description %>">
+  <label for="inv-inv_image">Image</label>
+  <input type="text" name="inv_image" id="inv-inv_image" required pattern="^\/images\/vehicles\/[a-zA-Z0-9_-]+\.(png|jpg|jpeg|webp)$" value="<%= locals.inv_image %>">
+  <label for="inv-thumbnail">Thumbnail</label>
+  <input type="text" name="inv_thumbnail" id="inv-thumbnail" required pattern="^\/images\/vehicles\/[a-zA-Z0-9_-]+\.(png|jpg|jpeg|webp)$" value="<%= locals.inv_thumbnail %>">
+  <label for="inv-price">Price (1-9 digits)</label>
+  <input type="text" name="inv_price" id="inv-price" required pattern="^\d{1,9}$" value="<%= locals.inv_price %>">
+  <button class="admin-button" type="submit" value="Edit Item" disabled>Edit Item</button>
+  <input type="hidden" name="inv_id"
+  <% if(locals.inv_id) { %> value="<%= locals.inv_id %>"
+  <% } %>>
+</form>
+
+<script src="../../js/inv-update.js"></script>

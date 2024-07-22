@@ -85,6 +85,34 @@ invControl.buildDeleteClassificationView = async function (req, res, next) {
 };
 
 /* ***************************
+ *  Build edit inventory view
+ * ************************** */
+invControl.editInventoryView = async function (req, res, next) {
+  const inv_id = parseInt(req.params.inv_id)
+  let nav = await utilities.getNav()
+  const itemData = await invModel.getVehicleDetailsByInvId(inv_id)
+  const classificationSelect = await utilities.buildClassificationList(itemData[0].classification_id)
+  const itemName = `${itemData[0].inv_make} ${itemData[0].inv_model}`
+  res.render("./inventory/edit-inventory", {
+    title: "Edit " + itemName,
+    nav,
+    classificationSelect: classificationSelect,
+    errors: null,
+    inv_id: itemData[0].inv_id,
+    inv_make: itemData[0].inv_make,
+    inv_model: itemData[0].inv_model,
+    inv_year: itemData[0].inv_year,
+    inv_description: itemData[0].inv_description,
+    inv_image: itemData[0].inv_image,
+    inv_thumbnail: itemData[0].inv_thumbnail,
+    inv_price: itemData[0].inv_price,
+    inv_miles: itemData[0].inv_miles,
+    inv_color: itemData[0].inv_color,
+    classification_id: itemData[0].classification_id
+  })
+}
+
+/* ***************************
  *  Model Interfacing Functions (POST)
  * ************************** */
 // Add new classificaiton
@@ -155,6 +183,67 @@ invControl.addInventory = async function (req, res, next) {
     res.redirect("./add-inventory");
   }
 };
+
+/* ***************************
+ *  Edit Inventory Data
+ * ************************** */
+invControl.editInventory = async function (req, res, next) {
+  let nav = await utilities.getNav()
+  const {
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_year,
+    inv_miles,
+    inv_color,
+    classification_id,
+  } = req.body
+
+  const editResult = await invModel.editInventory(
+    inv_id,  
+    inv_make,
+    inv_model,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_year,
+    inv_miles,
+    inv_color,
+    classification_id
+  )
+
+  if (editResult) {
+    const itemName = editResult.inv_make + " " + editResult.inv_model
+    req.flash("notice", `Details for the ${itemName} have been successfully edited.`)
+    res.redirect("/inv/admin")
+  } else {
+    const classificationSelect = await utilities.buildClassificationList(classification_id)
+    const itemName = `${inv_make} ${inv_model}`
+    req.flash("bad-notice", "Sorry, the insert failed.")
+    res.status(501).render("inventory/edit-inventory", {
+    title: "Edit " + itemName,
+    nav,
+    classificationSelect: classificationSelect,
+    errors: null,
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_year,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_miles,
+    inv_color,
+    classification_id
+    })
+  }
+}
 
 // Delete inventory item
 invControl.deleteInventory = async function (req, res, next) {

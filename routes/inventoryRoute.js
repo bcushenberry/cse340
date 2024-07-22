@@ -43,9 +43,15 @@ router.get(
 // Route to build the Delete Inventory view
 //router.get("/delete-inventory", utilities.handleErrors(invController.buildDeleteInventoryView));
 
+// Route to build the inventory in the management view
 router.get(
   "/getInventory/:classification_id",
   utilities.handleErrors(invController.getInventoryJSON)
+);
+
+// Route to build the view for editing an item
+router.get(
+  "/edit-inventory/:inv_id", utilities.handleErrors(invController.editInventoryView)
 );
 
 // Route to add a new classification
@@ -78,6 +84,12 @@ router.post(
   invValidate.inventoryRules(),
   invValidate.checkAddInventoryData,
   utilities.handleErrors(invController.deleteInventory)
+);
+
+router.post("/edit-inventory/",
+  invValidate.newInventoryRules(),
+  invValidate.checkEditInventoryData,
+  utilities.handleErrors(invController.editInventory)
 );
 
 module.exports = router;
