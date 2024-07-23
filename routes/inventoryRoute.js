@@ -5,91 +5,44 @@ const utilities = require("../utilities");
 const invValidate = require("../utilities/inventoryValidation");
 
 // Route to build inventory by classification view
-router.get(
-  "/type/:classificationId",
-  utilities.handleErrors(invController.buildByClassificationId)
-);
+router.get("/type/:classificationId", utilities.handleErrors(invController.buildByClassificationId));
 
 // Route to get single item ID and build the view
-router.get(
-  "/detail/:invId",
-  utilities.handleErrors(invController.buildByInvId)
-);
+router.get("/detail/:invId", utilities.handleErrors(invController.buildByInvId));
 
 // Route to build admin view
-router.get(
-  "/admin",
-  utilities.handleErrors(invController.buildAdminView)
-);
+router.get("/admin",utilities.handleErrors(invController.buildAdminView));
 
 // Route to build the Add Classification view
-router.get(
-  "/add-classification",
-  utilities.handleErrors(invController.buildAddClassificationView)
-);
-
-// Route to build the Delete Classification view
-router.get(
-  "/delete-classification",
-  utilities.handleErrors(invController.buildDeleteClassificationView)
-);
-
-// Route to build the Add Inventory view
-router.get(
-  "/add-inventory",
-  utilities.handleErrors(invController.buildAddInventoryView)
-);
-
-// Route to build the Delete Inventory view
-//router.get("/delete-inventory", utilities.handleErrors(invController.buildDeleteInventoryView));
-
-// Route to build the inventory in the management view
-router.get(
-  "/getInventory/:classification_id",
-  utilities.handleErrors(invController.getInventoryJSON)
-);
-
-// Route to build the view for editing an item
-router.get(
-  "/edit-inventory/:inv_id", utilities.handleErrors(invController.editInventoryView)
-);
+router.get("/add-classification",utilities.handleErrors(invController.buildAddClassificationView));
 
 // Route to add a new classification
-router.post(
-  "/add-classification",
-  invValidate.classificationRules(),
-  invValidate.checkAddClassificationData,
-  utilities.handleErrors(invController.addClassification)
-);
+router.post("/add-classification", invValidate.classificationRules(), invValidate.checkAddClassificationData, utilities.handleErrors(invController.addClassification));
+
+// Route to build the Delete Classification view
+router.get("/delete-classification", utilities.handleErrors(invController.buildDeleteClassificationView));
 
 // Route to delete a classification
-router.post(
-  "/delete-classification",
-  invValidate.classificationRules(),
-  invValidate.checkAddClassificationData,
-  utilities.handleErrors(invController.deleteClassification)
-);
+router.post("/delete-classification", utilities.handleErrors(invController.deleteClassification));
+
+// Route to build the inventory in the management view
+router.get("/get-inventory/:classification_id", utilities.handleErrors(invController.getInventoryJSON));
+
+// Route to build the Add Inventory view
+router.get("/add-inventory", utilities.handleErrors(invController.buildAddInventoryView));
 
 // Route to add a new item
-router.post(
-  "/add-inventory",
-  invValidate.inventoryRules(),
-  invValidate.checkAddInventoryData,
-  utilities.handleErrors(invController.addInventory)
-);
+router.post("/add-inventory", invValidate.inventoryRules(), invValidate.checkAddInventoryData, utilities.handleErrors(invController.addInventory));
+
+// Route to build the Delete Item confirmation view
+router.get("/delete-inventory/:inv_id", utilities.handleErrors(invController.buildDeleteConfirmationView));
 
 // Route to delete an item
-router.post(
-  "/delete-inventory",
-  invValidate.inventoryRules(),
-  invValidate.checkAddInventoryData,
-  utilities.handleErrors(invController.deleteInventory)
-);
+router.post("/delete-inventory/", utilities.handleErrors(invController.deleteInventory));
 
-router.post("/edit-inventory/",
-  invValidate.newInventoryRules(),
-  invValidate.checkEditInventoryData,
-  utilities.handleErrors(invController.editInventory)
-);
+// Route to build the view for editing an item
+router.get("/edit-inventory/:inv_id", utilities.handleErrors(invController.editInventoryView));
+
+router.post("/edit-inventory/", invValidate.newInventoryRules(), invValidate.checkEditInventoryData, utilities.handleErrors(invController.editInventory));
 
 module.exports = router;

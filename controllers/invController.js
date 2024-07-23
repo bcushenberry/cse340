@@ -3,10 +3,13 @@ const utilities = require("../utilities/");
 
 const invControl = {};
 
-/* ***************************
- *  View Building Functions (GET)
- * ************************** */
-// Build inventory by classification view
+/* *********************************
+ *  Classification-related functions
+ * ******************************** */
+
+/****** Building Views (GET) ******/
+
+// Build Inventory by Classification View
 invControl.buildByClassificationId = async function (req, res, next) {
   const classification_id = req.params.classificationId;
   const data = await invModel.getInventoryByClassificationId(classification_id);
@@ -21,7 +24,85 @@ invControl.buildByClassificationId = async function (req, res, next) {
   });
 };
 
-// Build detailed view for single inventory item
+// Build Add Classification View
+invControl.buildAddClassificationView = async function (req, res, next) {
+  let nav = await utilities.getNav();
+  res.render("./inventory/add-classification", {
+    title: "Add Classification",
+    nav,
+    errors: null,
+  });
+};
+
+// Build Delete Classification View
+invControl.buildDeleteClassificationView = async function (req, res, next) {
+  let nav = await utilities.getNav();
+  const classificationSelect = await utilities.buildClassificationList();
+  res.render("./inventory/delete-classification", {
+    title: "Delete Classification",
+    nav,
+    errors: null,
+    classificationSelect,
+  });
+};
+
+// Return Inventory by Classification As JSON 
+invControl.getInventoryJSON = async (req, res, next) => {
+  const classification_id = parseInt(req.params.classification_id)
+  const invData = await invModel.getInventoryByClassificationId(classification_id)
+  if (invData[0].inv_id) {
+    return res.json(invData)
+  } else {
+    next(new Error("No data returned"))
+  }
+}
+
+/****** Add/Delete (POST) ******/
+
+// Add New Classificaiton
+invControl.addClassification = async function (req, res, next) {
+  const classification_name = req.body.classification_name;
+  const addClass = await invModel.addClassificationToDb(classification_name);
+  if (addClass) {
+    req.flash("notice", "Classification successfully added!");
+    res.redirect("./admin");
+  } else {
+    req.flash("bad-notice", "Failed to add classification.");
+    res.redirect("./add-classification");
+  }
+};
+
+// Delete Classificaiton
+invControl.deleteClassification = async function (req, res, next) {
+  const classification_id = req.body.classification_id;
+  if (!classification_id) {
+    req.flash("bad-notice", "Please select a classification.");
+    return res.redirect("./delete-classification");
+  }
+
+  try {
+    const deleteClass = await invModel.deleteClassificationFromDb(classification_id);
+
+    if (deleteClass) {
+      req.flash("notice", "Classification successfully deleted.");
+      res.redirect("./admin");
+    } else {
+      req.flash("bad-notice", "Failed to delete classification. Please try again.");
+      res.redirect("./delete-classification");
+    }
+  } catch (error) {
+    req.flash("bad-notice", "Error deleting classification: " + error.message);
+    res.redirect("./delete-classification");
+  }
+};
+
+/* *********************************
+ *  Inventory-related functions
+ * ******************************** */
+
+/****** Building Views (GET) ******/
+
+// Build Detailed View (single inventory item)
 invControl.buildByInvId = async function (req, res, next) {
   //  console.log('Route handler invoked for /detail/:invId');
   const inv_id = req.params.invId;
@@ -37,32 +118,7 @@ invControl.buildByInvId = async function (req, res, next) {
   });
 };
 
-// Build admin view
-invControl.buildAdminView = async function (req, res, next) {
-  const adminPage = await utilities.buildAdminPage();
-  let nav = await utilities.getNav();
-  const classificationSelect = await utilities.buildClassificationList();
-  req.flash("notice", "To add a new classification or item, please press the corresponding button.")
-  req.flash("bad-notice", "Note: the delete buttons are still works in progress.")
-  res.render("./inventory/admin", {
-    title: "Inventory Management Page",
-    nav,
-    adminPage,
-    classificationSelect,
-  });
-};
-
-// Build Add Classification view
-invControl.buildAddClassificationView = async function (req, res, next) {
-  let nav = await utilities.getNav();
-  res.render("./inventory/add-classification", {
-    title: "Add Classification",
-    nav,
-    errors: null,
-  });
-};
-
-// Build Add Inventory view
+// Build Add Inventory View
 invControl.buildAddInventoryView = async function (req, res, next) {
   const classificationList = await utilities.buildClassificationList();
   let nav = await utilities.getNav();
@@ -74,19 +130,7 @@ invControl.buildAddInventoryView = async function (req, res, next) {
   });
 };
 
-// Build Delete Classification view
-invControl.buildDeleteClassificationView = async function (req, res, next) {
-  let nav = await utilities.getNav();
-  res.render("./inventory/delete-classification", {
-    title: "Delete Classification",
-    nav,
-    errors: null,
-  });
-};
-
-/* ***************************
- *  Build edit inventory view
- * ************************** */
+// Build Edit Inventory View
 invControl.editInventoryView = async function (req, res, next) {
   const inv_id = parseInt(req.params.inv_id)
   let nav = await utilities.getNav()
@@ -112,44 +156,27 @@ invControl.editInventoryView = async function (req, res, next) {
   })
 }
 
-/* ***************************
- *  Model Interfacing Functions (POST)
- * ************************** */
-// Add new classificaiton
-invControl.addClassification = async function (req, res, next) {
-  const classification_name = req.body.classification_name;
-  const addClass = await invModel.addClassificationToDb(classification_name);
-  if (addClass) {
-    req.flash("notice", "Classification successfully added!");
-    res.redirect("./admin");
-  } else {
-    req.flash("bad-notice", "Failed to add classification.");
-    res.redirect("./add-classification");
-  }
-};
+// Build Delete Inventory Confirmation View
+invControl.buildDeleteConfirmationView = async function (req, res, next) {
+  const inv_id = parseInt(req.params.inv_id)
+  let nav = await utilities.getNav()
+  const itemData = await invModel.getVehicleDetailsByInvId(inv_id)
+  const itemName = `${itemData[0].inv_make} ${itemData[0].inv_model}`
+  res.render("./inventory/delete-inventory", {
+    title: "Delete " + itemName,
+    nav,
+    errors: null,
+    inv_id: itemData[0].inv_id,
+    inv_make: itemData[0].inv_make,
+    inv_model: itemData[0].inv_model,
+    inv_year: itemData[0].inv_year,
+    inv_price: itemData[0].inv_price
+  })
+}
 
-// Delete classificaiton
-invControl.deleteClassification = async function (req, res, next) {
-  const classification_name = req.body.classification_name;
-  if (!classification_name) {
-    req.flash("bad-notice", "Classification name is required.");
-    return res.redirect("./delete-classification");
-  }
+/****** Add/Delete (POST) ******/
 
-  const deleteClass = await invModel.deleteClassificationFromDb(
-    classification_name
-  );
-
-  if (deleteClass.rowCount) {
-    req.flash("notice", "Classification successfully deleted.");
-    res.redirect("./admin");
-  } else {
-    req.flash("bad-notice", "Failed to delete classification. Perhaps there was a typo?");
-    res.redirect("./delete-classification");
-  }
-};
-
-// Add new inventory item
+// Add Inventory (Single Item)
 invControl.addInventory = async function (req, res, next) {
   const { inv_make,
     inv_model,
@@ -184,9 +211,7 @@ invControl.addInventory = async function (req, res, next) {
   }
 };
 
-/* ***************************
- *  Edit Inventory Data
- * ************************** */
+// Edit Inventory (Single Item)
 invControl.editInventory = async function (req, res, next) {
   let nav = await utilities.getNav()
   const {
@@ -224,7 +249,7 @@ invControl.editInventory = async function (req, res, next) {
   } else {
     const classificationSelect = await utilities.buildClassificationList(classification_id)
     const itemName = `${inv_make} ${inv_model}`
-    req.flash("bad-notice", "Sorry, the insert failed.")
+    req.flash("bad-notice", "Sorry, the edit failed.")
     res.status(501).render("inventory/edit-inventory", {
     title: "Edit " + itemName,
     nav,
@@ -245,38 +270,36 @@ invControl.editInventory = async function (req, res, next) {
   }
 }
 
-// Delete inventory item
+// Delete Inventory (Single Item)
 invControl.deleteInventory = async function (req, res, next) {
-  const inv_id = req.body.inv_id;
-  if (!inv_id) {
-    req.flash("bad-notice", "Item ID is required.");
-    return res.redirect("./delete-inventory");
-  }
+  let nav = await utilities.getNav()
+  const inv_id = parseInt(req.body.inv_id)
+  const deleteResult = await invModel.deleteInventoryFromDb(inv_id)
 
-  const deleteItem = await invModel.deleteInventoryFromDb(
-    classification_name
-  );
-
-  if (deleteItem.rowCount) {
-    req.flash("notice", "Item successfully deleted from inventory.");
-    res.redirect("./admin");
+  if (deleteResult) {
+    req.flash("notice", `Vehicle successfully deleted!`)
+    res.redirect("/inv/admin")
   } else {
-    req.flash("bad-notice","Failed to delete item. Perhaps there was a typo?");
-    res.redirect("./delete-inventory");
-  }
-};
-
-/* ***************************
- *  Return Inventory by Classification As JSON
- * ************************** */
-invControl.getInventoryJSON = async (req, res, next) => {
-  const classification_id = parseInt(req.params.classification_id)
-  const invData = await invModel.getInventoryByClassificationId(classification_id)
-  if (invData[0].inv_id) {
-    return res.json(invData)
-  } else {
-    next(new Error("No data returned"))
+    req.flash("bad-notice", "Failed to delete vehicle.")
+    res.status(501).redirect("inventory/delete-inventory/" + inv_id)
   }
 }
+
+/* ***************************
+ *  Admin
+ * ************************** */
+
+// Build Admin View
+invControl.buildAdminView = async function (req, res, next) {
+  const adminPage = await utilities.buildAdminPage();
+  let nav = await utilities.getNav();
+  const classificationSelect = await utilities.buildClassificationList();
+  res.render("./inventory/admin", {
+    title: "Inventory Management Page",
+    nav,
+    adminPage,
+    classificationSelect,
+  });
+};
 
 module.exports = invControl;

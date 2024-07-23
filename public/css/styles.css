@@ -265,7 +265,7 @@ footer p {
   font-size: large;
   border-radius: 20px;
   padding: .5rem;
-  width: 12.5rem;
+  width: 12.75rem;
   margin: 0 auto;
   margin-top: 1rem;
 }
@@ -315,6 +315,12 @@ tr:nth-child(even) {
 
 tr:hover {
   background-color: #f1f1f1;
+}
+
+.confirm-deletion {
+  text-align: center;
+  color: red;
+  font-weight: bold;
 }
 
 @media screen and (min-width: 750px) {

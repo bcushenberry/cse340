@@ -139,10 +139,6 @@ Util.buildAdminPage = async function () {
   <form class="account-forms" action="/inv/add-inventory" method="get">
       <button class="admin-button" type="submit" value="Add Inventory Item">Add Inventory Item</button>
   </form>
-
-  <form class="account-forms" action="/inv/delete-inventory" method="get">
-    <button class="admin-button" type="submit" value="Delete Inventory Item">Delete Inventory Item</button>
-  </form>
   `;
   return adminPage;
 };

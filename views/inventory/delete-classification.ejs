@@ -18,6 +18,6 @@
 
 <form class="account-forms" action="/inv/delete-classification" method="post">
     <label for="classification-name">Classification Name</label>
-    <input type="text" name="classification_name" id="classification-name" required pattern="^[a-zA-Z0-9]{3,}$" value="<%= locals.classification_name %>">
+    <%- classificationSelect %>
     <button class="admin-button" type="submit" value="Delete Classification">Delete Classification</button>
 </form>

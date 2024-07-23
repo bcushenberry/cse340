@@ -44,45 +44,45 @@ async function getVehicleDetailsByInvId(inv_Id) {
 }
 
 /* ********************************
- *  Add and delete classifications
+ *  Add classification
  * ******************************** */
-async function addClassificationToDb(class_name) {
+async function addClassificationToDb(classification_id) {
   try {
     const data = await pool.query(
       `INSERT INTO public.classification
       (classification_name)
       VALUES
-      ($1)
-      RETURNING *`,
-      [class_name]
+      ($1)`,
+      [classification_id]
     );
-    console.log("Add Classification Result:", data.rows);
     return data.rows;
   } catch (error) {
     console.error("addclassificationtodb error" + error);
-    return null;
   }
 }
 
-async function deleteClassificationFromDb(class_name) {
+/* ********************************
+ *  Delete classification
+ * ******************************** */
+async function deleteClassificationFromDb(classification_id) {
   try {
-    const data = await pool.query(
-      `DELETE FROM public.classification
-      WHERE classification_name = $1
-      RETURNING *`,
-      [class_name]
+    const data_i = await pool.query(
+      `DELETE FROM public.inventory WHERE classification_id = $1`,
+      [classification_id]
     );
-    console.log("Delete Classification Result:", data.rows);
-    return data;
+    const data_c = await pool.query(
+      `DELETE FROM public.classification WHERE classification_id = $1`,
+      [classification_id]
+    );
+    return data_i, data_c;
   } catch (error) {
-    console.error("deleteclassification error" + error);
-    return null;
+    throw new Error("Delete Classification Error: " + error.message);
   }
 }
 
-/* ***************************
- *  Add and delete inventory
- * *************************** */
+/* ***************************************
+ *  Add Inventory Data
+ * ************************************ */
 
 async function addNewInventoryToDb(new_item) {
   const {
@@ -106,11 +106,9 @@ async function addNewInventoryToDb(new_item) {
       RETURNING *`,
       [inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color, classification_id]
     );
-    console.log("Add Item Result:", data.rows);
     return data.rows;
   } catch (error) {
-    console.error("addnewinventorytodb error" + error);
-    return null;
+    new Error("Add Inventory Error")
   }
 }
 
@@ -148,23 +146,23 @@ async function editInventory(
     ])
     return data.rows[0]
   } catch (error) {
-    console.error("model error: " + error)
+    new Error("Edit Inventory Error")
   }
 }
 
+/* ***************************
+ *  Delete Inventory Data
+ * ************************** */
 async function deleteInventoryFromDb(inv_id) {
   try {
     const data = await pool.query(
       `DELETE FROM public.inventory
-      WHERE inv_id = $1
-      RETURNING *`,
+      WHERE inv_id = $1`,
       [inv_id]
     );
-    console.log("Delete Inventory Result:", data.rows);
     return data;
   } catch (error) {
-    console.error("deleteinventoryfromdb error" + error);
-    return null;
+      new Error("Delete Inventory Error")
   }
 }
 
