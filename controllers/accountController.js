@@ -12,7 +12,7 @@ async function buildAccountView(req, res) {
   let nav = await utilities.getNav()
   const account_type = res.locals.accountData.account_type
   const account_firstname = res.locals.accountData.account_firstname
-  const account_id = res.locals.accountData.account_id
+  const account_id = parseInt(res.locals.accountData.account_id)
   res.render("account/landing-page", {
     title: "Account Management",
     nav,
@@ -55,8 +55,8 @@ async function buildUpdateView(req, res, next) {
   const account_firstname = res.locals.accountData.account_firstname
   const account_lastname = res.locals.accountData.account_lastname
   const account_email = res.locals.accountData.account_email
-  const account_id = res.locals.accountData.account_id
-  res.render("account/update"/* + account_id */, {
+  const account_id = parseInt(res.locals.accountData.account_id)
+  res.render("account/update", {
     title: "Update Account Info",
     nav,
     account_firstname,
@@ -150,32 +150,36 @@ async function accountLogin(req, res) {
 *  Process Account Update
 * *************************************** */
 async function updateAccount(req, res) {
+  const { account_id, account_firstname, account_lastname, account_email } = req.body
   let nav = await utilities.getNav()
-  const { account_firstname, account_lastname, account_email, account_id } = req.body
-  console.log(account_firstname, account_lastname, account_email, account_id)
-  const updateResult = await accountModel.updateAccountinDb(account_firstname, account_lastname, account_email, account_id)
+
   try {
+    const updateResult = await accountModel.updateAccountinDb(account_id, account_firstname, account_lastname, account_email)
+
     if (updateResult) {
       const updatedData = await accountModel.getAccountById(account_id)
-      const accessToken = jwt.sign(updatedData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 60 })
+      const accessToken = jwt.sign(updatedData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 })
       res.cookie("jwt", accessToken, { httpOnly: true, secure: true, maxAge: 3600 * 1000 })
 
       req.flash("notice", "Info updated successfully!")
       res.redirect("/account")
     } else {
       req.flash("bad-notice", "Failed to update account information.")
-      res.status(501).render("account/update/"/* + account_id */, {
+      res.status(500).render("account/update", {
         title: "Update Account Info",
         nav,
         errors: null,
-        account_firstname,
-        account_lastname,
-        account_email,
+        accountData: req.body,
       })
     }
   } catch (error) {
     req.flash("bad-notice", "Error updating account info: " + error.message);
-    res.redirect("/account/update/"/* + account_id */);
+    res.render("account/update", {
+      title: "Update Account Info",
+      nav,
+      errors: null,
+      accountData: req.body,
+    })
   }
 }
 /* ****************************************
@@ -183,7 +187,8 @@ async function updateAccount(req, res) {
 * *************************************** */
 async function changePassword(req, res) {
   let nav = await utilities.getNav()
-  const { account_password, account_id } = req.body
+  let { account_password, account_id } = req.body
+  account_id = parseInt(account_id)
   let hashedPassword;
 
   try {
@@ -200,7 +205,7 @@ async function changePassword(req, res) {
       res.redirect("/account")
     } else {
       req.flash("bad-notice", "Failed to change password.")
-      res.status(501).render("account/update/"/* + account_id */, {
+      res.status(501).render("account/update", {
         title: "Update Account Info",
         nav,
         errors: null,
@@ -209,7 +214,7 @@ async function changePassword(req, res) {
 
   } catch (error) {
     req.flash("bad-notice", "Sorry, there was an error changing your password.")
-    res.status(500).render("account/update/"/* + account_id */, {
+    res.status(500).render("account/update", {
       title: "Update Account Info",
       nav,
       errors: null,
@@ -217,4 +222,4 @@ async function changePassword(req, res) {
   }
 }
 
-  module.exports = { buildAccountView, buildLoginView, buildRegistrationView, buildUpdateView, registerAccount, accountLogin, updateAccount }
+  module.exports = { buildAccountView, buildLoginView, buildRegistrationView, buildUpdateView, registerAccount, accountLogin, updateAccount, changePassword }

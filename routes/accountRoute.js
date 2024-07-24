@@ -20,9 +20,15 @@ router.get("/register", utilities.handleErrors(accountController.buildRegistrati
 router.post("/register", regValidate.registationRules(), regValidate.checkRegData, utilities.handleErrors(accountController.registerAccount));
 
 // Route to build update view
-router.get("/update/", utilities.handleErrors(accountController.buildUpdateView));
+router.get("/update", utilities.checkLogin, utilities.handleErrors(accountController.buildUpdateView));
 
 // Route to update account info
-router.post("/update", utilities.handleErrors(accountController.updateAccount));
+router.post("/update", utilities.checkLogin, regValidate.updateRules(), regValidate.checkUpdateData, utilities.handleErrors(accountController.updateAccount));
+
+// Route to change password
+router.post("/change-password", utilities.checkLogin, regValidate.changePasswordRules(), regValidate.checkUpdateData, utilities.handleErrors(accountController.changePassword));
+
+// Route for logout
+router.get("/logout", (req, res) => {res.clearCookie('jwt'), req.flash('notice', 'You have been logged out.'), res.redirect('/')});
 
 module.exports = router;

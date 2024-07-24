@@ -13,14 +13,14 @@ validate.registationRules = () => {
       .trim()
       .escape()
       .isLength({ min: 1 })
-      .withMessage("First name must contain one or more characters."), // on error this message is sent.
+      .withMessage("First name must contain at least one letter."), // on error this message is sent.
 
     // lastname is required and must be string
     body("account_lastname")
       .trim()
       .escape()
-      .isLength({ min: 2 })
-      .withMessage("Last name must contain two or more characters."), // on error this message is sent.
+      .isLength({ min: 1 })
+      .withMessage("Last name must contain at least one letter."), // on error this message is sent.
 
     // valid email is required and cannot already exist in the database
     body("account_email")
@@ -56,6 +56,47 @@ validate.loginRules = () => {
       .isEmail()
       .normalizeEmail() // refer to validator.js docs
       .withMessage("A valid email is required.")    
+  ]
+}
+
+validate.updateRules = () => {
+  return [
+    // firstname is required and must be string
+    body("account_firstname")
+      .trim()
+      .escape()
+      .isLength({ min: 1 })
+      .withMessage("First name must contain at least one letter."), // on error this message is sent.
+
+    // lastname is required and must be string
+    body("account_lastname")
+      .trim()
+      .escape()
+      .isLength({ min: 1 })
+      .withMessage("Last name must contain at least one letter."), // on error this message is sent.
+
+    // valid email is required and cannot already exist in the database
+    body("account_email")
+      .trim()
+      .isEmail()
+      .normalizeEmail() // refer to validator.js docs
+      .withMessage("A valid email is required."),
+  ]
+}
+
+validate.changePasswordRules = () => {
+  return [
+        // password is required and must be strong password
+        body("account_password")
+        .trim()
+        .isStrongPassword({
+          minLength: 12,
+          minLowercase: 1,
+          minUppercase: 1,
+          minNumbers: 1,
+          minSymbols: 1,
+        })
+        .withMessage("Password does not meet requirements."),
   ]
 }
 
@@ -97,6 +138,21 @@ validate.checkLoginData = async (req, res, next) => {
     return
   }
   next()
+}
+
+validate.checkUpdateData = async (req, res, next) => {
+  let errors = validationResult(req);
+  if (!errors.isEmpty()) {
+      let nav = await utilities.getNav();
+      res.render("account/update", {
+          errors,
+          title: "Update Account Info",
+          nav,
+          accountData: req.body,
+      });
+      return;
+  }
+  next();
 }
 
   module.exports = validate
