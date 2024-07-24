@@ -18,9 +18,3 @@ pnpm-lock.yaml
 # .DS_Store is only for Mac users
 **/.DS_Store
 README.md
-
-mitchel-account-model.js
-mitchel-accountController.js
-mitchel-add-inventory.ejs
-mitchel-invController.js
-mitchel-inventory-validation.js
