@@ -186,5 +186,31 @@ Util.checkLogin = (req, res, next) => {
   }
  }
 
+ /* ************************************
+ *  Check Role for Authorized Access
+ * ************************************ */
+ Util.checkRole = (req, res, next) => {
+  if (req.cookies.jwt) {
+   jwt.verify(
+    req.cookies.jwt,
+    process.env.ACCESS_TOKEN_SECRET,
+    function (err, role) {
+     if (err) {
+      req.flash("notice", "Please log in.")
+      res.clearCookie("jwt")
+      return res.redirect("/account/login")
+     }
+     role = res.locals.accountData.account_type
+     if (role.toLowerCase() === "client") {
+      console.log("Unauthorized user");
+      return req.flash("bad-notice", "Unauthorized access."), res.redirect("/")
+    }
+     next()
+    })
+    // Force login if no JWT is found
+  } else {
+    return req.flash("notice", "Please log in."), res.redirect("/account/login")
+  }
+}
 
 module.exports = Util;

@@ -1,17 +1,27 @@
 <% if (title) { %>
-    <h1><%= title %></h1>
-    <% } else {
-      res.redirect('/')
-    } %>
+  <h1><%= title %></h1>
+<% } else { %>
+  <% res.redirect('/') %>
+<% } %>
 
 <!-- Message Block -->
 <%- messages() %>
 
+<h2>Welcome <%= account_firstname %></h2>
+
+<h3>Edit Account Information</h3>
+<p><a href="/account/update/">Go to account update page</a></p>
+<!-- < %= account_id % > -->
+<% if (account_type !== "Client") { %>
+  <h3>Inventory Management</h3>
+  <p><a href="/inv/admin">Go to inventory management</a></p>
+<% } %>
+
 <% if (errors) { %>
   <ul class="bad-notice">
-  <% errors.array().forEach(error => { %>
+    <% errors.array().forEach(function(error) { %>
       <li><%= error.msg %></li>
-  <%  }) %>
+    <% }) %>
   </ul>
 <% } %>
 

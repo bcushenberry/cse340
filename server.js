@@ -71,7 +71,7 @@ app.use("/trigger", require("./routes/triggerErrorRoute"))
 app.use("/account", require("./routes/accountRoute"))
 
 // Route to build login view
-//router.get("/login", utilities.handleErrors(accountController.buildLogin))
+//router.get("/login", utilities.handleErrors(accountController.buildLoginView))
 
 /* ***********************
 * File Not Found Route (Must be last route in list)

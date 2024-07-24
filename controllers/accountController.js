@@ -8,11 +8,17 @@ const jwt = require("jsonwebtoken")
 /* ****************************************
 *  Deliver account view
 * *************************************** */
-async function buildAccount(req, res, next) {
+async function buildAccountView(req, res) {
   let nav = await utilities.getNav()
+  const account_type = res.locals.accountData.account_type
+  const account_firstname = res.locals.accountData.account_firstname
+  const account_id = res.locals.accountData.account_id
   res.render("account/landing-page", {
-    title: "Account",
+    title: "Account Management",
     nav,
+    account_type,
+    account_firstname,
+    account_id,
     errors: null,
   })
 }
@@ -20,7 +26,7 @@ async function buildAccount(req, res, next) {
 /* ****************************************
 *  Deliver login view
 * *************************************** */
-async function buildLogin(req, res, next) {
+async function buildLoginView(req, res, next) {
   let nav = await utilities.getNav()
   res.render("account/login", {
     title: "Login",
@@ -32,12 +38,32 @@ async function buildLogin(req, res, next) {
 /* ****************************************
 *  Deliver registration view
 * *************************************** */
-async function buildRegister(req, res, next) {
+async function buildRegistrationView(req, res, next) {
   let nav = await utilities.getNav()
   res.render("account/register", {
     title: "Register",
     nav,
     errors: null, 
+  })
+}
+
+/* ****************************************
+*  Deliver update view
+* *************************************** */
+async function buildUpdateView(req, res, next) {
+  let nav = await utilities.getNav()
+  const account_firstname = res.locals.accountData.account_firstname
+  const account_lastname = res.locals.accountData.account_lastname
+  const account_email = res.locals.accountData.account_email
+  const account_id = res.locals.accountData.account_id
+  res.render("account/update"/* + account_id */, {
+    title: "Update Account Info",
+    nav,
+    account_firstname,
+    account_lastname,
+    account_email,
+    account_id,
+    errors: null,
   })
 }
 
@@ -116,8 +142,79 @@ async function accountLogin(req, res) {
    return res.redirect("/account/")
    }
   } catch (error) {
-   return new Error('Access Forbidden')
+   return new Error("Access Forbidden")
   }
  }
  
-  module.exports = { buildAccount, buildLogin, buildRegister, registerAccount, accountLogin }
+/* ****************************************
+*  Process Account Update
+* *************************************** */
+async function updateAccount(req, res) {
+  let nav = await utilities.getNav()
+  const { account_firstname, account_lastname, account_email, account_id } = req.body
+  console.log(account_firstname, account_lastname, account_email, account_id)
+  const updateResult = await accountModel.updateAccountinDb(account_firstname, account_lastname, account_email, account_id)
+  try {
+    if (updateResult) {
+      const updatedData = await accountModel.getAccountById(account_id)
+      const accessToken = jwt.sign(updatedData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 })
+      res.cookie("jwt", accessToken, { httpOnly: true, secure: true, maxAge: 3600 * 1000 })
+
+      req.flash("notice", "Info updated successfully!")
+      res.redirect("/account")
+    } else {
+      req.flash("bad-notice", "Failed to update account information.")
+      res.status(501).render("account/update/"/* + account_id */, {
+        title: "Update Account Info",
+        nav,
+        errors: null,
+        account_firstname,
+        account_lastname,
+        account_email,
+      })
+    }
+  } catch (error) {
+    req.flash("bad-notice", "Error updating account info: " + error.message);
+    res.redirect("/account/update/"/* + account_id */);
+  }
+}
+/* ****************************************
+*  Change Password
+* *************************************** */
+async function changePassword(req, res) {
+  let nav = await utilities.getNav()
+  const { account_password, account_id } = req.body
+  let hashedPassword;
+
+  try {
+    // regular password and cost (salt is generated automatically)
+    hashedPassword = await bcrypt.hashSync(account_password, 10)
+    const result = await accountModel.updatePassword(hashedPassword, account_id)
+    
+    if (result) {
+      const updatedData = await accountModel.getAccountById(account_id)
+      const accessToken = jwt.sign(updatedData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 })
+      res.cookie("jwt", accessToken, { httpOnly: true, secure: true, maxAge: 3600 * 1000 })
+
+      req.flash("notice", "Password updated successfully!")
+      res.redirect("/account")
+    } else {
+      req.flash("bad-notice", "Failed to change password.")
+      res.status(501).render("account/update/"/* + account_id */, {
+        title: "Update Account Info",
+        nav,
+        errors: null,
+      })
+    }
+
+  } catch (error) {
+    req.flash("bad-notice", "Sorry, there was an error changing your password.")
+    res.status(500).render("account/update/"/* + account_id */, {
+      title: "Update Account Info",
+      nav,
+      errors: null,
+    })
+  }
+}
+
+  module.exports = { buildAccountView, buildLoginView, buildRegistrationView, buildUpdateView, registerAccount, accountLogin, updateAccount }

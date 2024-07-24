@@ -282,12 +282,16 @@ select {
 
 .notice {
   margin: 0 auto;
+  list-style: none;
+  text-align: center;
 }
 
 .bad-notice {
   color: darkred;
   margin: 0 auto;
   font-weight: bold;
+  list-style: none;
+  text-align: center;
 }
 
 table {

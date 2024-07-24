@@ -104,13 +104,7 @@ validate.classificationRules = () => {
       .isLength({ min: 2 })
       .withMessage("The classification name must be at least two letters long.")
       .matches(/^[a-zA-Z]+$/)
-      .withMessage("The classification name must use only letters."), // on error this message is sent.
-
-    body("classification_id")
-      .trim()
-      .escape()
-      .isInt()
-      .withMessage("The classification ID must be an integer.")
+      .withMessage("The classification name must use only letters."),
   ];
 };
 
