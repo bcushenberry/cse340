@@ -157,7 +157,7 @@ async function updateAccount(req, res) {
   try {
     if (updateResult) {
       const updatedData = await accountModel.getAccountById(account_id)
-      const accessToken = jwt.sign(updatedData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 })
+      const accessToken = jwt.sign(updatedData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 60 })
       res.cookie("jwt", accessToken, { httpOnly: true, secure: true, maxAge: 3600 * 1000 })
 
       req.flash("notice", "Info updated successfully!")
@@ -193,7 +193,7 @@ async function changePassword(req, res) {
     
     if (result) {
       const updatedData = await accountModel.getAccountById(account_id)
-      const accessToken = jwt.sign(updatedData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 })
+      const accessToken = jwt.sign(updatedData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 60 })
       res.cookie("jwt", accessToken, { httpOnly: true, secure: true, maxAge: 3600 * 1000 })
 
       req.flash("notice", "Password updated successfully!")
